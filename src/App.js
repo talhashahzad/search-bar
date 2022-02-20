@@ -4,7 +4,7 @@ import SearchBar from "./Components/SearchBar";
 
 function App() {
   return (
-    <div className="bg-gray-100 h-screen w-screen">
+    <div className="bg-gray-200 h-screen w-screen">
       <header className="text-lg ">
         <div>
           <SearchBar />

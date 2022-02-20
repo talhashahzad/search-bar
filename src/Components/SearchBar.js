@@ -19,11 +19,8 @@ function SearchBar() {
   };
 
   const handleChange = (e) => {
-    setQueryString(e.target.value);
-    const normalisedString = queryString.replace(
-      /[!&\/\\#,+()$~%.'":*?<>{}]/g,
-      ""
-    );
+    const str = e.target.value;
+    const normalisedString = str.replace(/[!&\/\\#,+()$~%.'":*?<>{}]/g, "");
     setSearchQuery(normalisedString);
   };
 
@@ -35,12 +32,13 @@ function SearchBar() {
   const handleSubmit = async () => {
     setShowResult(false);
 
-    if (queryString === "") {
+    if (searchQuery === "") {
       setEmptyQueryResult(true);
       return;
     }
     try {
       setEmptyQueryResult(false);
+      console.log("query: " + searchQuery);
 
       let response = await axios.get(
         `${baseURL}${searchQuery}?app_id=${appID}`
@@ -48,12 +46,13 @@ function SearchBar() {
       let data = response.data;
       setResponseLength(response.data.length);
       setArtistsList(data);
-      setSearchHeader(queryString);
+      setSearchHeader(searchQuery);
       setShowResult(true);
       console.log("response: " + responseLength);
-      console.log("response: ", data);
+      console.log("response: ", artistsList);
     } catch (error) {
-      alert(error.response.data.error);
+      alert("no response!");
+      console.log(error);
     }
   };
 
@@ -110,7 +109,27 @@ function SearchBar() {
             {responseLength} result(s) for "{searchHeader}"
           </div>
           <br />
-          <div className="py-4 "></div>
+          <div className="p-4 flex justify-around">
+            <button>
+              <div className="inline-flex bg-white shadow-lg hover:shadow-xl hover:-translate-y-1 hover:scale-105 hover:shadow-2xl duration-300">
+                <div className="p-4">
+                  <img
+                    className="h-20 w-20 rounded-full border-2 border-black"
+                    src={artistsList.image_url}
+                    alt={artistsList.name}
+                  />
+                </div>
+                <div className="px-2 py-6 text-white text-base flex flex-col grid justify-items-start">
+                  <div className="text-gray-700 font-bold text-md justify-self-start grid justify-items-start">
+                    {artistsList.name}
+                  </div>
+                  <div className="text-gray-600 text-md truncate lg:text-clip">
+                    {artistsList.facebook_page_url}
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
         </div>
       )}
       {emptyQueryResult && (
